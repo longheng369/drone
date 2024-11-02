@@ -1,0 +1,139 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.ant-menu-title-content {
+   font-size: 1rem;
+}
+
+.btn-1 {
+   background-color: #3b82f6;
+   padding: 0.8rem;
+   font-weight: bold;
+   font-size: 3rem;
+   color: white;
+   border-radius: 0.8rem;
+}
+
+.btn-2 {
+   background-color: red;
+   padding: 0.8rem;
+   font-weight: bold;
+   font-size: 3rem;
+   color: white;
+   border-radius: 0.8rem;
+}
+
+.volunteer .ant-select-selection-item {
+   font-size: 1.5rem;
+   color: #0092f9;
+}
+
+.volunteer .ant-select-selector {
+   border-radius: 0 !important;
+   background-color: #afdeff !important;
+}
+
+.triangle-topleft {
+   width: 0;
+   height: 0;
+   border-top: 80px solid aqua;
+   border-right: 60px solid transparent;
+}
+
+.triangle-topright {
+   width: 0;
+   height: 0;
+   border-top: 80px solid aqua;
+   border-left: 60px solid transparent;
+}
+
+.img{
+   filter: drop-shadow(0 0 5px aqua);
+}
+
+.volunteer-select .ant-select-selection-item{
+   /* font-size: 1.5rem; */
+}
+
+.container-scoreboard {
+   background-image: url('./assets/background.png');
+   background-size:cover;
+   background-position: center;
+   background-repeat: no-repeat;
+}
+
+.active {
+   background-color: #22c55e !important;
+}
+
+
+.shape-container {
+   display: flex;
+   position: relative;
+}
+
+.Z {
+   width: 200px; /* Adjust width as needed */
+   height: 100px; /* Adjust height as needed */
+   background-color: #4CAF50; /* Change color as needed */
+   clip-path:polygon(0px 0px, 99% 2px, 83.00% 47.00%, 29px 45%);
+   position: absolute;
+}
+
+.line {
+   position: absolute;
+   width: 200px; /* Adjust width as needed */
+   height: 100px; /* Adjust height as needed */
+   background-color: #4CAF50; /* Change color as needed */
+   clip-path:polygon(0px 0px, 99% 2px, 83.00% 47.00%, 29px 45%);
+}
+
+.zigzag-shape {
+   width: 200px; /* Adjust width as needed */
+   height: 100px; /* Adjust height as needed */
+   background-color: #4CAF50; /* Change color as needed */
+   clip-path:polygon(0px 0px, 99% 2px, 83.00% 47.00%, 29px 45%);
+   margin: 50px auto; /* Center the shape */
+}
+
+.first-parent{
+  
+   border-top: 7.5vh solid #c70000;
+	border-left: 0px solid transparent;
+	border-right: 3vw solid transparent;
+	height: 0;
+	width: 30vw;
+   position: relative;
+}
+
+.first-parent .first-child {
+   position: absolute;
+   left: 70%;
+   bottom: 0;
+   height: 6vh;
+   width: 60%;
+   transform: skewX(-40deg);
+   z-index: 10;
+}
+
+.second-parent {
+   width: 30vw;
+   position: relative;
+   height: 10vh; /* Make sure there’s height */
+   background-color: #afdeff;
+}
+
+
+.second-parent .first-child-second {
+   position: absolute;
+   left: -8%;
+   top: 0; /* Make sure top is set */
+   height: 3vh;
+   width: 40%;
+   transform: skewX(-40deg);
+   z-index: 10;
+   background-color: green;
+}
+
+
