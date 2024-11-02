@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useDataContext } from "../Context"; // Import the custom hook
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 import Card from "../components/Card";
 import { obstacles_round_1_blue, obstacles_round_1_red, obstacles_round_2_blue, obstacles_round_2_red } from "../data";
 
@@ -36,7 +36,7 @@ const Start: React.FC = () => {
    const [rightTeamName, setRightTeamName] = useState('');
    const [leftTeamName, setLeftTeamName] = useState('');
 
-   const navigate = useNavigate();
+   // const navigate = useNavigate();
 
    useEffect(() => {
       // Check if `left_time_start` has changed from true to false after the initial render
@@ -241,7 +241,7 @@ return () => {
                <div className="text-white grid grid-cols-2 gap-3 p-5">
                   <div className="flex flex-col gap-3">
                         <div className="text-center text-lg">Round 2</div>
-                        {obstacles_round_1_blue.map((obstacle, i) => (
+                        {obstacles_round_1_blue.map((obstacle) => (
                            <Card 
                               key={obstacle.id}
                               text={obstacle.obstacle_name} 
@@ -253,7 +253,7 @@ return () => {
                   
                   <div className="flex flex-col gap-3 border-l border-gray-400">
                         <div className="text-center text-lg">Round 1</div>
-                        {obstacles_round_2_blue.map((obstacle, i) => (
+                        {obstacles_round_2_blue.map((obstacle) => (
                            <Card 
                               key={obstacle.id}
                               text={obstacle.obstacle_name} 

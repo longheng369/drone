@@ -2,7 +2,7 @@ import { useDataContext } from "../Context";
 
 const Goal : React.FC = () => {
    const {data, isLoading, stopLeftTime, stopRightTime} = useDataContext();
-   const time = new Date().toLocaleTimeString();
+   // const time = new Date().toLocaleTimeString();
 
    const handleClickLeft = async() => {
       stopLeftTime();
