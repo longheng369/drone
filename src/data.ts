@@ -11,9 +11,6 @@ interface Obstacles {
    active_comparison : string;
 }
 
-interface LoginCode {
-   code: string;
-}
 
 export const teams : Team[] = [
    { id: 1, team_name: 'RCL' },

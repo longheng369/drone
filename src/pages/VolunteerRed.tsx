@@ -1,20 +1,12 @@
-import { Select } from "antd";
 import { useEffect, useState } from "react";
 import { useDataContext } from "../Context";
+import { decodeToken } from "../tokenUtils";
 
-const { Option } = Select;
 
 const VolunteerRed: React.FC = () => {
-const [selectPoint, setSelectPoint] = useState<string>(localStorage.getItem("volunteer_point") ?? "1");
 const [activeButtons, setActiveButtons] = useState<{ id: number; color: string; round: number }[]>([]);
 
 const { data, isLoading, appendScoresRed } = useDataContext();
-
-const handleSelectChange = (value: string) => {
-   localStorage.setItem("volunteer_point", value);
-   setActiveButtons([]);
-   setSelectPoint(value);
-};
 
 
    useEffect(() => {
@@ -86,7 +78,8 @@ const getMissions = (option: string) => {
    }
 };
 
-const missions = getMissions(selectPoint);
+const token = decodeToken(localStorage.getItem("token")!);
+const missions = getMissions(token.pairingPoint!);
 
 if (isLoading) {
    return (

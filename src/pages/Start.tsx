@@ -33,8 +33,8 @@ const Start: React.FC = () => {
    const [isEditLeft, setIsEditLeft] = useState<boolean>(false);
    const [isEditRight, setIsEditRight] = useState<boolean>(false);
 
-   const [rightTeamName, setRightTeamName] = useState('');
-   const [leftTeamName, setLeftTeamName] = useState('');
+   // const [rightTeamName, setRightTeamName] = useState('');
+   // const [leftTeamName, setLeftTeamName] = useState('');
 
    // const navigate = useNavigate();
 
