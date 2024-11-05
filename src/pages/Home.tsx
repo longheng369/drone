@@ -20,11 +20,11 @@ const Home: React.FC = () => {
    const preparing_time_interval = useRef<NodeJS.Timeout | undefined>(undefined);
 
 
-   const [preparing_time, set_preparing_time] = useState<number>(5);
+   const [preparing_time, set_preparing_time] = useState<number>(10);
 
    const handlePreparing = () => {
       set_is_preparing(true);
-      localStorage.setItem("is_preparing", 'true');
+      // localStorage.setItem("is_preparing", 'true');
       appendData({is_preparing: true, to_submit: false})
    }
 
@@ -35,6 +35,7 @@ const Home: React.FC = () => {
             set_preparing_time((prev) => {
                if (prev <= 0) {
                   if (preparing_time_interval.current) clearInterval(preparing_time_interval.current);
+                  appendData({is_preparing : false});
                   return 0;
                }
                return prev - 1;
@@ -43,7 +44,10 @@ const Home: React.FC = () => {
       }
    
       return () => {
-         if (preparing_time_interval.current) clearInterval(preparing_time_interval.current);
+         if (preparing_time_interval.current) {
+            clearInterval(preparing_time_interval.current)
+            appendData({is_preparing : false});
+         };
       };
 
    }, [is_preparing]);
@@ -52,7 +56,7 @@ const Home: React.FC = () => {
 
    useEffect(() => {
       if (preparing_time === 0) {
-         localStorage.setItem('is_preparing', 'false');
+         // localStorage.setItem('is_preparing', 'false');
          setTimeout(() => {
             navigate("/start");
          }, 300)
@@ -60,13 +64,15 @@ const Home: React.FC = () => {
    }, [preparing_time])
 
    const handleSelectedLeftTeam = (left_team_name: string) => {
-      localStorage.setItem('left_team_name', left_team_name);
-      setSelectedLeftTeam(left_team_name)
+      // localStorage.setItem('left_team_name', left_team_name);
+      setSelectedLeftTeam(left_team_name);
+      appendData({left_team: left_team_name})
    }
 
    const handleSelectedRightTeam = (right_team_name: string) => {
-      localStorage.setItem('right_team_name', right_team_name);
-      setSelectedRightTeam(right_team_name)
+      // localStorage.setItem('right_team_name', right_team_name);
+      setSelectedRightTeam(right_team_name);
+      appendData({right_team: right_team_name})
    }
 
    const channel = new BroadcastChannel('my_channel');
@@ -95,7 +101,7 @@ const Home: React.FC = () => {
          <div>
             <div className="grid grid-cols-[2fr_0.3fr_2fr]">
                <div>
-                  <div className="bg-gradient-to-r from-red-500 w-full text-center text-xl text-white p-2">
+                  <div className="bg-gradient-to-r from-red-500 w-full text-center text-3xl text-white p-2">
                      {selectedLeftTeam !== '' ? selectedLeftTeam : "Please Select Team"}
                   </div>
                </div>
@@ -105,7 +111,7 @@ const Home: React.FC = () => {
                   <span className="italic font-[500] text-3xl">Vs</span>
                </div>
                <div>
-                  <div className="bg-gradient-to-l from-blue-600 text-xl w-full text-center text-white p-2">
+                  <div className="bg-gradient-to-l from-blue-600 text-3xl w-full text-center text-white p-2">
                      {selectedRightTeam !== '' ? selectedRightTeam : "Please Select Team"}
                   </div>
                </div>

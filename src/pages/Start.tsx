@@ -55,38 +55,38 @@ const Start: React.FC = () => {
    }, [data?.left_time_start, data?.right_time_start]);
 
    
-useEffect(() => {
-// Function to fetch team names from local storage
-const fetchTeamNames = () => {
-   const rightTeam = localStorage.getItem('right_team_name');
-   const leftTeam = localStorage.getItem('left_team_name');
+// useEffect(() => {
+// // Function to fetch team names from local storage
+// const fetchTeamNames = () => {
+//    const rightTeam = localStorage.getItem('right_team_name');
+//    const leftTeam = localStorage.getItem('left_team_name');
 
-   if (rightTeam) {
-      setRightTeamName(rightTeam);
-   }
+//    if (rightTeam) {
+//       setRightTeamName(rightTeam);
+//    }
 
-   if (leftTeam) {
-      setLeftTeamName(leftTeam);
-   }
-};
+//    if (leftTeam) {
+//       setLeftTeamName(leftTeam);
+//    }
+// };
 
-// Fetch the initial team names when the component mounts
-fetchTeamNames();
+// // Fetch the initial team names when the component mounts
+// fetchTeamNames();
 
-// Event listener for local storage changes
-const handleStorageChange = (event: StorageEvent) => {
-   if (event.key === 'right_team_name' || event.key === 'left_team_name') {
-      fetchTeamNames(); // Update state with new values
-   }
-};
+// // Event listener for local storage changes
+// const handleStorageChange = (event: StorageEvent) => {
+//    if (event.key === 'right_team_name' || event.key === 'left_team_name') {
+//       fetchTeamNames(); // Update state with new values
+//    }
+// };
 
-window.addEventListener('storage', handleStorageChange);
+// window.addEventListener('storage', handleStorageChange);
 
-// Cleanup the event listener on component unmount
-return () => {
-   window.removeEventListener('storage', handleStorageChange);
-};
-}, []);
+// // Cleanup the event listener on component unmount
+// return () => {
+//    window.removeEventListener('storage', handleStorageChange);
+// };
+// }, []);
 
 
    // const blueScores = [
@@ -194,16 +194,16 @@ return () => {
             <div>
                <div className="grid grid-cols-[2fr_0.3fr_2fr] bg-gray-800">
                   <div>
-                        <div className="bg-gradient-to-r text-xl from-red-600 w-full text-center text-white p-2">
-                           {leftTeamName}
+                        <div className="bg-gradient-to-r text-3xl from-red-600 w-full text-center text-white p-2">
+                           {selectedLeftTeam}
                         </div>
                   </div>
                   <div className="text-white flex flex-col items-center justify-center w-full">
                         <span className="italic font-[500] text-3xl">Vs</span>
                   </div>
                   <div>
-                        <div className="bg-gradient-to-l text-xl from-blue-600 w-full text-center text-white p-2">
-                           {rightTeamName}
+                        <div className="bg-gradient-to-l text-3xl from-blue-600 w-full text-center text-white p-2">
+                           {selectedRightTeam}
                         </div>
                   </div>
                </div>

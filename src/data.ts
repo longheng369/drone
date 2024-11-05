@@ -11,6 +11,10 @@ interface Obstacles {
    active_comparison : string;
 }
 
+interface LoginCode {
+   code: string;
+}
+
 export const teams : Team[] = [
    { id: 1, team_name: 'RCL' },
    { id: 2, team_name: 'SoloBot' },
@@ -67,3 +71,4 @@ export const obstacles_round_2_blue : Obstacles[] = [
    {id: 7, obstacle_name: 'Obstacle 7', active_comparison: 'obstacle 7 blue', score: 10, round: 2},
    {id: 8, obstacle_name: 'Obstacle 8', active_comparison: 'obstacle 8 blue', score: 2, round: 2}
 ];
+

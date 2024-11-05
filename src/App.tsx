@@ -1,84 +1,95 @@
-import { Route, Routes, Navigate, useNavigate, useLocation } from "react-router-dom";
+// App.tsx
+import { Route, Routes, Navigate, useNavigate, useLocation, Outlet } from "react-router-dom";
 import Home from "./pages/Home";
 import Layout from "./Layout";
 import VolunteerBlue from "./pages/VolunteerBlue";
 import VolunteerRed from "./pages/VolunteerRed";
-import ScoreBoard from "./pages/ScoreBoard";
+import ScoreBoardNew from "./pages/ScoreBoardNew";
 import Start from "./pages/Start";
-import { useEffect } from "react";
 import Goal from "./pages/Goal";
-import Referee from "./pages/Referee";
+import Unauthenticated from "./pages/Unauthenticated";
+import { useEffect } from "react";
+import { createToken, decodeToken } from "./tokenUtils";
+
+interface ProtectedRouteProps {
+   allowedRoles: string[]; // Array of allowed roles
+   children?: React.ReactNode;
+}
 
 const App: React.FC = () => {
    const navigate = useNavigate();
    const location = useLocation();
 
-   // QRChecker function to handle QR code scanning and navigation
    const QRChecker = () => {
       const params = new URLSearchParams(location.search);
       const isScanned = params.get("scanned");
       const role = params.get("role");
+      const pairingPoint = params.get("pairing_point");
+      const password = params.get("password");
 
       useEffect(() => {
-         if (isScanned === "true" && role) {
-            localStorage.setItem("userRole", role);
-            navigate(`/${role}`); // Navigate based on the role immediately
+         // Check for admin role and password
+         if (role === 'admin' && password === import.meta.env.VITE_ADMIN_PASSWORD) {
+            const token = createToken(role);
+            localStorage.setItem("token", token);
+            Promise.resolve().then(() => navigate('/')); // Ensure token is set before navigating
+         } else if (role === 'admin' && password !== import.meta.env.VITE_ADMIN_PASSWORD) {
+            navigate('/unauthenticated');
          }
-      }, [isScanned, role, navigate]);
+
+         // Check for volunteer roles and valid pairing points
+         if (isScanned === "true" && (role === "volunteer-red" || role === "volunteer-blue")) {
+            if (['1', '2', '3', '4'].includes(pairingPoint || '')) {
+               const token = createToken(role, pairingPoint!);
+               localStorage.setItem("token", token);
+               Promise.resolve().then(() => navigate(`/${role}`)); // Redirect after setting token
+            } else {
+               navigate('/unauthenticated'); // Redirect if pairing point is invalid
+            }
+         } else if (isScanned === "true") {
+            navigate('/unauthenticated'); // Redirect if role is not valid
+         }
+      }, [isScanned, role, pairingPoint, password]); // Dependencies added for reactivity
 
       return null;
    };
 
-   // PrivateRoute function for role-based access
-   const PrivateRoute = ({ children, requiredRole }: { children: JSX.Element; requiredRole: string }) => {
-      const userRole = localStorage.getItem("userRole");
-      // Redirect unauthorized roles or missing roles
-      if (userRole !== requiredRole) return <Navigate to="/" />;
-      return children;
-   };
+   const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ allowedRoles, children }) => {
+      const token = localStorage.getItem("token");
+      let userRole: string | null = null;
 
-   // Redirect volunteers from accessing the home route
-   const ProtectedHome = () => {
-      const userRole = localStorage.getItem("userRole");
-      if (userRole?.includes("volunteer")) {
-         return <Navigate to={`/${userRole}`} />;
+      // Decode token only if it exists
+      if (token) {
+         const decodedToken = decodeToken(token);
+         userRole = decodedToken.role;
       }
-      return <Home />;
+
+      // Check if the user's role is included in the allowed roles
+      const isAuthorized = userRole && allowedRoles.includes(userRole);
+
+      if (!isAuthorized) {
+         if (userRole?.startsWith('volunteer')) {
+            return <Navigate to={`/${userRole}`} replace />; // Redirect to volunteer's specific page
+         } else {
+            return <Navigate to="/unauthenticated" replace />; // Redirect unauthorized users
+         }
+      }
+
+      return <>{children || <Outlet />}</>;
    };
 
    return (
       <>
-         <QRChecker /> {/* Execute QR check on each route */}
+         <QRChecker />
          <Routes>
             <Route path="/" element={<Layout />}>
-               <Route index element={<ProtectedHome />} />
-               <Route
-                  path="volunteer-red"
-                  element={
-                     <PrivateRoute requiredRole="volunteer-red">
-                        <VolunteerRed />
-                     </PrivateRoute>
-                  }
-               />
-               <Route
-                  path="volunteer-blue"
-                  element={
-                     <PrivateRoute requiredRole="volunteer-blue">
-                        <VolunteerBlue />
-                     </PrivateRoute>
-                  }
-               />
-               <Route
-                  path="volunteer-goal"
-                  element={
-                     <PrivateRoute requiredRole="volunteer-goal">
-                        <Goal />
-                     </PrivateRoute>
-                  }
-               />
-               <Route path="score_board" element={<ScoreBoard />} />
-               <Route path="start" element={<Start />} />
-               <Route path="referee" element={<Referee />} />
+               <Route index element={<ProtectedRoute allowedRoles={['admin']}><Home /></ProtectedRoute>} />
+               <Route path="volunteer-red" element={<ProtectedRoute allowedRoles={['admin', 'volunteer-red']}><VolunteerRed /></ProtectedRoute>} />
+               <Route path="volunteer-blue" element={<ProtectedRoute allowedRoles={['admin', 'volunteer-blue']}><VolunteerBlue /></ProtectedRoute>} />
+               <Route path="volunteer-goal" element={<Goal />} />
+               <Route path="score_board" element={<ScoreBoardNew />} />
+               <Route path="start" element={<ProtectedRoute allowedRoles={['admin']}><Start /></ProtectedRoute>} />
+               <Route path="unauthenticated" element={<Unauthenticated />} />
             </Route>
          </Routes>
       </>

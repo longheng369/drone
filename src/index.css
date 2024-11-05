@@ -137,3 +137,21 @@
 }
 
 
+.trapezoid1 {
+   width: 100%; /* Full width */
+   height: 200px; /* Set height */
+   background-color: red; /* Background color */
+   clip-path: polygon(20% 0%, 80% 0%, 100% 100%, 0% 100%); /* Define trapezoid shape */
+}
+.trapezoid2 {
+   width: 100%; /* Full width */
+   height: 200px; /* Set height */
+   background-color: red; /* Background color */
+   clip-path: polygon(20% 0%, 80% 0%, 100% 100%, 0% 100%); /* Define trapezoid shape */
+}
+.trapezoid3 {
+   width: 100%; /* Full width */
+   height: 200px; /* Set height */
+   background-color: red; /* Background color */
+   clip-path: polygon(20% 0%, 80% 0%, 100% 100%, 0% 100%); /* Define trapezoid shape */
+}

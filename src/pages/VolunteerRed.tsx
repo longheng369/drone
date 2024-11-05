@@ -99,20 +99,15 @@ if (isLoading) {
 
 
 if(!data?.is_start_matching) {
-   return <div className="flex flex-col h-screen items-center justify-center">Not Start Matching Yet</div>
+   return <div className="flex flex-col h-screen items-center justify-center bg-gray-800" >
+      <div className="h-full w-full text-white flex justify-center items-center text-3xl" style={{background: "radial-gradient(circle, #EF4444, rgba(31, 41, 55, 0.5))"}}>
+         Not Start Matching Yet
+      </div>
+   </div>
 }
 
 return (
    <div className="flex flex-col">
-      <div className="h-[7vh] w-full bg-gray-400 flex">
-      <Select onChange={handleSelectChange} defaultValue={"1"} value={selectPoint} className="w-full h-full volunteer">
-         <Option key={1} value="1">Point 1</Option>
-         <Option key={2} value="2">Point 2</Option>
-         <Option key={3} value="3">Point 3</Option>
-         <Option key={4} value="4">Point 4</Option>
-      </Select>
-      <button className="text-lg font-[500] px-4 bg-blue-600 text-white">Edit</button>
-      </div>
 
       {data?.to_submit ? <div className="flex flex-col justify-center items-center h-screen text-2xl">The match is done</div> :
 
