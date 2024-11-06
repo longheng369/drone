@@ -3,6 +3,7 @@ import { useDataContext } from "../Context";
 import { useNavigate } from "react-router-dom";
 import { Team } from "../Interface";
 import { useHomeContext } from "../contexts/HomeContext";
+import sound from "../assets/mixkit-arcade-game-jump-coin-216.wav"
 
 const Home: React.FC = () => {
    const {
@@ -15,6 +16,14 @@ const Home: React.FC = () => {
       appendData
    } = useDataContext();
 
+   const playAudio = () => {
+      const audio = new Audio(sound);
+      audio.play().catch((error) => {
+         console.error("Error playing audio:", error);
+      });
+   };
+
+
    const {is_preparing, set_is_preparing} = useHomeContext();
 
    const preparing_time_interval = useRef<NodeJS.Timeout | undefined>(undefined);
@@ -23,6 +32,7 @@ const Home: React.FC = () => {
    const [preparing_time, set_preparing_time] = useState<number>(10);
 
    const handlePreparing = () => {
+      playAudio();
       set_is_preparing(true);
       // localStorage.setItem("is_preparing", 'true');
       appendData({is_preparing: true, to_submit: false})

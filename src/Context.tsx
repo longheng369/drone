@@ -17,7 +17,8 @@ import { db } from "./firebase";
 import { useNavigate } from "react-router-dom";
 import { message } from "antd";
 import { useHomeContext } from "./contexts/HomeContext";
-
+import sound from "./assets/mixkit-arcade-game-jump-coin-216.wav"
+import sound1 from "./assets/mixkit-sci-fi-interface-robot-click-901.wav"
 interface SubmitData {
    left_team?: string | number | null | undefined;
    left_team_scores: number;
@@ -72,6 +73,8 @@ interface ContextType {
    createDatabaseEntry: (data: any) => void;
 
    handleSubmit: (data: SubmitData) => void;
+   deleteScoreRed: (data: string, round: number) => void;
+   deleteScoreBlue: (data: string, round: number) => void;
 }
 
 
@@ -167,6 +170,32 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({
       }
    };
 
+   const deleteScoreBlue = async (activeComparisonToDelete: string, round: number) => {
+      try {
+         const dbRef = ref(db, 'data/scores_blue');
+         
+         // Fetch the current scores array
+         const snapshot = await get(dbRef);
+         const existingScores = snapshot.exists() ? snapshot.val() : [];
+   
+         if (!Array.isArray(existingScores)) {
+            console.error("Data is not an array");
+            return;
+         }
+   
+         // Filter out the item with the specific `active_comparison` value
+         const updatedScores = existingScores.filter(
+            (score) => !(score.active_comparison === activeComparisonToDelete && score.round === round)
+         );
+   
+         // Update the database with the filtered array
+         await set(dbRef, updatedScores);
+         console.log("Item deleted from scores_red:", updatedScores);
+      } catch (error) {
+         console.error("Error deleting score:", error);
+      }
+   };
+
    const appendScoresRed = async (newScore: { obstacle: any; score: number, round: number, active_comparison: string }) => {
       try {
          const dbRef = ref(db, 'data/scores_red'); // Reference to the scores-blue path
@@ -187,6 +216,33 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({
       }
    };
 
+   const deleteScoreRed = async (activeComparisonToDelete: string, round: number) => {
+      try {
+         const dbRef = ref(db, 'data/scores_red');
+         
+         // Fetch the current scores array
+         const snapshot = await get(dbRef);
+         const existingScores = snapshot.exists() ? snapshot.val() : [];
+   
+         if (!Array.isArray(existingScores)) {
+            console.error("Data is not an array");
+            return;
+         }
+   
+         // Filter out the item with the specific `active_comparison` value
+         const updatedScores = existingScores.filter(
+            (score) => !(score.active_comparison === activeComparisonToDelete && score.round === round)
+         );
+   
+         // Update the database with the filtered array
+         await set(dbRef, updatedScores);
+         console.log("Item deleted from scores_red:", updatedScores);
+      } catch (error) {
+         console.error("Error deleting score:", error);
+      }
+   };
+   
+
    const appendData = async (data: any, key: string = "") => {
       try {
          const dbRef = ref(db, `data/${key}`);
@@ -196,6 +252,7 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({
          console.error("Error creating database entry:", error);
       }
    };
+
 
    const preparation_start = async () => {
       setIsPreparing(true);
@@ -227,7 +284,25 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({
       };
    };
 
+   const playAudio = () => {
+      const audio = new Audio(sound);
+      audio.play().catch((error) => {
+         console.error("Error playing audio:", error);
+      });
+   };
+
+   const playAudio1 = () => {
+      const audio = new Audio(sound1);
+      audio.play().catch((error) => {
+         console.error("Error playing audio:", error);
+      });
+   };
+
+
+
    const startMatching = async () => {
+
+      playAudio();
       setIsLeftTimeStop(false);
       setIsRightTimeStop(false);
 
@@ -308,11 +383,13 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({
    const stopLeftTime = async () => {
       if (leftTimeRef.current) leftTimeRef.current();
       setIsLeftTimeStop(true);
+      // playAudio();
       await appendData({ left_team_time: leftTime, is_left_time_stop: true, left_time_start: false });
    };
 
    const stopRightTime = async () => {
       if (rightTimeRef.current) rightTimeRef.current();
+      // playAudio();
       setIsRightTimeStop(true);
       await appendData({ right_team_time: rightTime, is_right_time_stop: true, right_time_start: false });
    };
@@ -323,6 +400,7 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({
 
 // Context API - Reset Function
 const reset = async () => {
+   playAudio1();
    if (praprationIntervalRef.current) praprationIntervalRef.current();
    
    // Reset all necessary states
@@ -402,7 +480,9 @@ const reset = async () => {
             appendScoresBlue,
             appendScoresRed,
             createDatabaseEntry,
-            handleSubmit
+            handleSubmit,
+            deleteScoreRed,
+            deleteScoreBlue
          }}
       >
          {children}
