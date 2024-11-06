@@ -19,6 +19,7 @@ import { message } from "antd";
 import { useHomeContext } from "./contexts/HomeContext";
 import sound from "./assets/mixkit-arcade-game-jump-coin-216.wav"
 import sound1 from "./assets/mixkit-sci-fi-interface-robot-click-901.wav"
+
 interface SubmitData {
    left_team?: string | number | null | undefined;
    left_team_scores: number;
@@ -366,11 +367,14 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({
    };
 
    const handleSubmit = async (data: SubmitData) => {
-      const submitData = {left_team: data.left_team, left_team_scores: data.left_team_scores, left_team_time: data.left_team_time ,right_team: data.right_team, right_team_scores: data.right_team_scores, right_team_time: data.right_team_time };
+      // const submitData = {left_team: data.left_team, left_team_scores: data.left_team_scores, left_team_time: data.left_team_time ,right_team: data.right_team, right_team_scores: data.right_team_scores, right_team_time: data.right_team_time };
+      const submitData = {left_team: data.left_team, left_team_scores: data.left_team_scores ,right_team: data.right_team, right_team_scores: data.right_team_scores};
 
       const submitRef = ref(db, 'submit');
 
-      set(submitRef, submitData)
+      appendData({submit: true});
+
+      update(submitRef, submitData)
          .then(() => {
             message.success("Submit Done!")
             console.log("Data submitted successfully");
@@ -397,6 +401,23 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({
    const stopMainTime = () => {
       if (mainTimeRef.current) mainTimeRef.current();
    };
+
+   const resetSubmit = async () => {
+      const submitRef = ref(db, "submit");
+
+      set(submitRef, {
+         left_team: "",
+         left_team_scores: 0,
+         left_team_time: 240,
+         right_team: "",
+         right_team_scores: 0,
+         right_team_time: 240,
+      }).then(() => {
+         console.log("reset success!");
+      }).catch((error) => {
+         console.log("Something went wrong!", error);
+      })
+   }
 
 // Context API - Reset Function
 const reset = async () => {
@@ -438,8 +459,12 @@ const reset = async () => {
        right_team: "", 
        scores_red: [], 
        scores_blue: [], 
-       to_submit: false
+       to_submit: false,
+       submit: false
    });
+
+   resetSubmit();
+   
 
 };
 

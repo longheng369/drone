@@ -33,11 +33,6 @@ const Start: React.FC = () => {
    const [isEditLeft, setIsEditLeft] = useState<boolean>(false);
    const [isEditRight, setIsEditRight] = useState<boolean>(false);
 
-   // const [rightTeamName, setRightTeamName] = useState('');
-   // const [leftTeamName, setLeftTeamName] = useState('');
-
-   // const navigate = useNavigate();
-
    useEffect(() => {
       // Check if `left_time_start` has changed from true to false after the initial render
       if (initialLeftTimeStart.current !== undefined && initialLeftTimeStart.current === true && data?.left_time_start === false) {
@@ -53,41 +48,6 @@ const Start: React.FC = () => {
       initialLeftTimeStart.current = data?.left_time_start;
       initialRightTimeStart.current = data?.right_time_start;
    }, [data?.left_time_start, data?.right_time_start]);
-
-   
-// useEffect(() => {
-// // Function to fetch team names from local storage
-// const fetchTeamNames = () => {
-//    const rightTeam = localStorage.getItem('right_team_name');
-//    const leftTeam = localStorage.getItem('left_team_name');
-
-//    if (rightTeam) {
-//       setRightTeamName(rightTeam);
-//    }
-
-//    if (leftTeam) {
-//       setLeftTeamName(leftTeam);
-//    }
-// };
-
-// // Fetch the initial team names when the component mounts
-// fetchTeamNames();
-
-// // Event listener for local storage changes
-// const handleStorageChange = (event: StorageEvent) => {
-//    if (event.key === 'right_team_name' || event.key === 'left_team_name') {
-//       fetchTeamNames(); // Update state with new values
-//    }
-// };
-
-// window.addEventListener('storage', handleStorageChange);
-
-// // Cleanup the event listener on component unmount
-// return () => {
-//    window.removeEventListener('storage', handleStorageChange);
-// };
-// }, []);
-
 
    // const blueScores = [
    //    { obstacle: '1', score: 3, round: 1, active_comparison: 'obstacle 1 blue' },
@@ -117,13 +77,6 @@ const Start: React.FC = () => {
       }
    },[data?.scores_blue, data?.scores_red])
 
-  
-   // useEffect(() => {
-   //    // Check if teams are not selected and redirect to home page
-   //    if (selectedLeftTeam === '' || selectedRightTeam === '') {
-   //          navigate("/"); // Redirect to home if no team selected
-   //    }
-   // }, [selectedLeftTeam, selectedRightTeam, navigate]);
 
    useEffect(() => {
       const updateIsStartMatching = async () => {

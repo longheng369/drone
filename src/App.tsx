@@ -46,6 +46,10 @@ const App: React.FC = () => {
             } else {
                navigate('/unauthenticated'); // Redirect if pairing point is invalid
             }
+         } else if (isScanned === "true" && role === "volunteer-goal") {
+            const token = createToken(role);
+            localStorage.setItem("token", token);
+            Promise.resolve().then(() => navigate('/volunteer-goal'));
          } else if (isScanned === "true") {
             navigate('/unauthenticated'); // Redirect if role is not valid
          }
@@ -86,7 +90,7 @@ const App: React.FC = () => {
                <Route index element={<ProtectedRoute allowedRoles={['admin']}><Home /></ProtectedRoute>} />
                <Route path="volunteer-red" element={<ProtectedRoute allowedRoles={['admin', 'volunteer-red']}><VolunteerRed /></ProtectedRoute>} />
                <Route path="volunteer-blue" element={<ProtectedRoute allowedRoles={['admin', 'volunteer-blue']}><VolunteerBlue /></ProtectedRoute>} />
-               <Route path="volunteer-goal" element={<Goal />} />
+               <Route path="volunteer-goal" element={<ProtectedRoute allowedRoles={['admin', 'volunteer-goal']}><Goal/></ProtectedRoute>} />
                <Route path="score_board" element={<ScoreBoardNew />} />
                <Route path="start" element={<ProtectedRoute allowedRoles={['admin']}><Start /></ProtectedRoute>} />
                <Route path="unauthenticated" element={<Unauthenticated />} />
