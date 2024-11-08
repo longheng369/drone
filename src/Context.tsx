@@ -89,7 +89,7 @@ const Context = createContext<ContextType | undefined>(undefined);
 export const DataProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
-  const initialPreparationTime = 6;
+  const initialPreparationTime = 60;
   const initialMatchingTime = 240;
   const { set_is_preparing } = useHomeContext();
   const [selectedLeftTeam, setSelectedLeftTeam] = useState<string>("");
