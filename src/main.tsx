@@ -5,13 +5,16 @@ import "./index.css";
 import { DataProvider } from "./Context.tsx";
 import { BrowserRouter } from "react-router-dom";
 import { HomeProvider } from "./contexts/HomeContext.tsx";
+import { StartProvider } from "./contexts/StartContext.tsx";
 
 createRoot(document.getElementById("root")!).render(
    <StrictMode>
       <BrowserRouter>
          <HomeProvider>
             <DataProvider>
-               <App />
+               <StartProvider>
+                  <App />
+               </StartProvider>
             </DataProvider>
          </HomeProvider>
       </BrowserRouter>

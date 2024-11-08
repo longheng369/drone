@@ -10,6 +10,7 @@ import Goal from "./pages/Goal";
 import Unauthenticated from "./pages/Unauthenticated";
 import { useEffect } from "react";
 import { createToken, decodeToken } from "./tokenUtils";
+import MatchControls from "./pages/MatchControls";
 
 interface ProtectedRouteProps {
    allowedRoles: string[]; // Array of allowed roles
@@ -94,6 +95,7 @@ const App: React.FC = () => {
                <Route path="score_board" element={<ScoreBoardNew />} />
                <Route path="start" element={<ProtectedRoute allowedRoles={['admin']}><Start /></ProtectedRoute>} />
                <Route path="unauthenticated" element={<Unauthenticated />} />
+               <Route path="test" element={<MatchControls/>} />
             </Route>
          </Routes>
       </>

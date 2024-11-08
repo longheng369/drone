@@ -7,9 +7,10 @@ import middleRight from "../assets/middleRight.svg";
 import vs from "../assets/vs.svg"
 import { db } from "../firebase";
 import { off, onValue, ref } from "firebase/database";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useDataContext } from "../Context";
-import {motion} from "framer-motion";;
+import {motion} from "framer-motion";import useCountdown from "../components/useCountdown";
+;
 
 
 const ScoreBoardNew : React.FC = () => {
@@ -17,11 +18,15 @@ const ScoreBoardNew : React.FC = () => {
    const {formatTime} = useDataContext();
    const [data, setData] = useState<any>('');
    const [isLoading, setIsLoading] = useState<boolean>(true);
-   const preparationTimeInterval = useRef<NodeJS.Timeout | null>(null);
-   const [preparationTime, setPreparationTime] = useState<number>(10);
-   const matchTimeInteval = useRef<NodeJS.Timeout | null>(null);
-   const [matchTime, setMatchTime] = useState<number>(240);
    const [submitData , setSubmitData] = useState<any>("");
+
+   const {initialPreparationTime, initialMatchingTime} = useDataContext();
+
+   const preparationTimer = useCountdown(initialPreparationTime, () => console.log("end"));
+
+   const mainTimer = useCountdown(initialMatchingTime, () => console.log("end"));
+
+   const preparationTimeBeforeStart = useCountdown(10, () => {mainTimer.reset(); mainTimer.start();});
 
    useEffect(() => {
       const dbRef = ref(db, "data");
@@ -58,59 +63,35 @@ const ScoreBoardNew : React.FC = () => {
    }, []);
 
    useEffect(() =>{
-      if(!isLoading) {
-         if(data?.is_preparing) {
-            preparationTimeInterval.current = setInterval(() => {
-               setPreparationTime((prev) => {
-                  if(prev <= 0) {
-                     if(preparationTimeInterval.current) clearInterval(preparationTimeInterval.current);
-                     setPreparationTime(10);
-                     return 0;
-                  }
-                  return prev - 1;
-               })
-            }, 1000);
-         } else {
-            // Clear interval if `is_preparing` is false
-            if (preparationTimeInterval.current) {
-               clearInterval(preparationTimeInterval.current);
-               preparationTimeInterval.current = null;
-               setPreparationTime(10);
-            }
-         }
+
+      if(data?.is_preparing) {
+         preparationTimer.start();
+      } else {
+         preparationTimer.reset();
       }
+      
 
    },[data?.is_preparing]);
   
-   useEffect(() => {
-      if (!isLoading) {
-         // Clear any existing interval first
-         if (matchTimeInteval.current) {
-            clearInterval(matchTimeInteval.current);
-         }
+   // useEffect(() => {
+   //    if (!isLoading) {
+   //       mainTimer.reset();
          
-         if (data?.is_start_matching) {
-            // Set up a new interval only if match has started
-            matchTimeInteval.current = setInterval(() => {
-               setMatchTime((prev) => {
-                  if (prev <= 0) {
-                     if (matchTimeInteval.current) clearInterval(matchTimeInteval.current);
-                     setMatchTime(240); // Reset the match time
-                     return 0; // Ensure it returns 0 when the time is up
-                  }
-                  return prev - 1; // Decrement time
-               });
-            }, 1000);
-         } else {
-            // If match is not started, reset the timer
-            if (matchTimeInteval.current) {
-               clearInterval(matchTimeInteval.current);
-               matchTimeInteval.current = null; // Clear reference
-               setMatchTime(240); // Reset to initial time
-            }
-         }
+   //       if (data?.is_start_matching) {
+   //          mainTimer.start();
+   //       } else {
+   //          mainTimer.reset();
+   //       }
+   //    }
+   // }, [data?.is_start_matching]);
+
+   useEffect(() => {
+      if(data?.is_prepare_before_start){
+         preparationTimeBeforeStart.start();
+      } else {
+         preparationTimeBeforeStart.reset();
       }
-   }, [data?.is_start_matching]);
+   },[data?.is_prepare_before_start])
    
    
 
@@ -163,8 +144,9 @@ const ScoreBoardNew : React.FC = () => {
             </div>
             <div className="relative">
                <div className="absolute w-[200%] h-[20vh] text-white bottom-[90%] left-[50%] translate-x-[-50%]">
-                  {data?.is_preparing ? <span className="text-[8rem] text-center block font-anton uppercase tracking-wide">{formatTime(preparationTime)}</span> :
-                  data?.is_start_matching ? <span className="text-[8rem] text-center block font-anton uppercase tracking-wide">{formatTime(matchTime)}</span> :
+                  {data?.is_preparing ? <span className="text-[8rem] text-center block font-anton uppercase tracking-wide">{formatTime(preparationTimer.timeLeft)}</span> :
+                  data?.is_prepare_before_start ? <span className="text-[8rem] text-center block font-anton uppercase tracking-wide">{formatTime(preparationTimeBeforeStart.timeLeft)}</span> :
+                  data?.is_start_matching ? <span className="text-[8rem] text-center block font-anton uppercase tracking-wide">{formatTime(mainTimer.timeLeft)}</span> :
                   data?.to_submit && data?.submit ? 
 
                   <motion.div
