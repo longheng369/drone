@@ -47,7 +47,7 @@ const Start: React.FC = () => {
   // const [isStarted, setIsStarted] = useState<boolean>(false);
   const [isPreparing, setIsPreparing] = useState<boolean>(true);
   const preparationTimer = useCountdown(10, () =>{handlePreparationEnd(); setIsPreparing(false);}); // 10-second preparation countdown
-  const mainTimer = useCountdown(initialMatchingTime, () => appendData({to_submit: true,is_left_time_stop: false, is_right_time_stop: false }));
+  const mainTimer = useCountdown(initialMatchingTime, () => {appendData({to_submit: true,is_left_time_stop: false, is_right_time_stop: false });});
   const leftTimer = useCountdown(initialMatchingTime, () => console.log("Left timer ended"));
   const rightTimer = useCountdown(initialMatchingTime, () => console.log("Right timer ended"));
 
@@ -137,6 +137,13 @@ const Start: React.FC = () => {
       appendData({to_submit: true});
     }
   },[data?.is_left_time_stop, data?.is_right_time_stop])
+
+  useEffect(() => {
+    if(data?.to_submit){
+      stopLeftTimer();
+      stopRightTimer();
+    }
+  }, [data?.to_submit])
 
   useEffect(() => {
     setRedScore(
